@@ -67,50 +67,46 @@ class Email_BounceHandler extends Controller {
 				if( isset($_REQUEST['SilverStripeMessageID'])) {
 					// Note: was sent out with: $project . '.' . $messageID;
 					$message_id_parts = explode('.', $_REQUEST['SilverStripeMessageID']);
-					// Note: was encoded with: base64_encode( $newsletter->ID . '_' . date( 'd-m-Y H:i:s' ) );
-					$newsletter_id_date_parts = explode ('_', base64_decode($message_id_parts[1]) );
 		
 					// Escape just in case
 					$SQL_memberID = Convert::raw2sql($member->ID);
-					$SQL_newsletterID = Convert::raw2sql($newsletter_id_date_parts[0]);
 					
 					// Log the bounce
-					$oldNewsletterSentRecipient = DataObject::get_one("Newsletter_SentRecipient",
-						"\"MemberID\" = '$SQL_memberID' AND \"ParentID\" = '$SQL_newsletterID'"
-						. " AND \"Email\" = '$SQL_email'");
-					
-					// Update the Newsletter_SentRecipient record if it exists
-					if($oldNewsletterSentRecipient) {			
-						$oldNewsletterSentRecipient->Result = 'Bounced';
-						$oldNewsletterSentRecipient->write();
-					} else {
-						// For some reason it didn't exist, create a new record
-						$newNewsletterSentRecipient = new Newsletter_SentRecipient();
-						$newNewsletterSentRecipient->Email = $SQL_email;
-						$newNewsletterSentRecipient->MemberID = $member->ID;
-						$newNewsletterSentRecipient->Result = 'Bounced';
-						$newNewsletterSentRecipient->ParentID = $newsletter_id_date_parts[0];
-						$newNewsletterSentRecipient->write();
-					}
+					if(class_exists('Newsletter_SentRecipient')) {
+						// Note: was encoded with: base64_encode( $newsletter->ID . '_' . date( 'd-m-Y H:i:s' ) );
+						$newsletter_id_date_parts = explode ('_', base64_decode($message_id_parts[1]) );
+						$SQL_newsletterID = Convert::raw2sql($newsletter_id_date_parts[0]);
+						$oldNewsletterSentRecipient = DataObject::get_one("Newsletter_SentRecipient",
+							"\"MemberID\" = '$SQL_memberID' AND \"ParentID\" = '$SQL_newsletterID'"
+							. " AND \"Email\" = '$SQL_email'");
+						
+						// Update the Newsletter_SentRecipient record if it exists
+						if($oldNewsletterSentRecipient) {			
+							$oldNewsletterSentRecipient->Result = 'Bounced';
+							$oldNewsletterSentRecipient->write();
+						} else {
+							// For some reason it didn't exist, create a new record
+							$newNewsletterSentRecipient = new Newsletter_SentRecipient();
+							$newNewsletterSentRecipient->Email = $SQL_email;
+							$newNewsletterSentRecipient->MemberID = $member->ID;
+							$newNewsletterSentRecipient->Result = 'Bounced';
+							$newNewsletterSentRecipient->ParentID = $newsletter_id_date_parts[0];
+							$newNewsletterSentRecipient->write();
+						}
 
-					// Now we are going to Blacklist this member so that email will not be sent to them in the future.
-					// Note: Sending can be re-enabled by going to 'Mailing List' 'Bounced' tab and unchecking the box
-					// under 'Blacklisted'
-					$member->setBlacklistedEmail(TRUE);
-					echo '<p><b>Member: '.$member->FirstName.' '.$member->Surname
-						.' <'.$member->Email.'> was added to the Email Blacklist!</b></p>';
+						// Now we are going to Blacklist this member so that email will not be sent to them in the future.
+						// Note: Sending can be re-enabled by going to 'Mailing List' 'Bounced' tab and unchecking the box
+						// under 'Blacklisted'
+						$member->setBlacklistedEmail(TRUE);
+						echo '<p><b>Member: '.$member->FirstName.' '.$member->Surname
+							.' <'.$member->Email.'> was added to the Email Blacklist!</b></p>';
+					}
 				}
 			} 
 						
-			if( !$date )
-					$date = date( 'd-m-Y' );
-			/*else
-					$date = date( 'd-m-Y', strtotime( $date ) );*/
+			if(!$date) $date = date( 'd-m-Y' );
 					
-			if( !$time )
-					$time = date( 'H:i:s' );
-			/*else
-					$time = date( 'H:i:s', strtotime( $time ) );*/
+			if(!$time) $time = date( 'H:i:s' );
 					
 			$record->BounceEmail = $email;
 			$record->BounceTime = $date . ' ' . $time;

@@ -11,6 +11,10 @@ It should be regarded as a starting point rather than a complete solution.
 In general, we recommend using third party email SaaS solutions
 if you care about bounce tracking and management.*
 
+If the [newsletter module](https://github.com/silverstripe-labs/silverstripe-newsletter)
+is installed, the bounce tracking can also identify the `Member`
+record and newsletter which this email related to, and track the data more specifically.
+
 ## Installation
 
 First of all, define a unique `EMAIL_BOUNCEHANDLER_KEY` constant,
