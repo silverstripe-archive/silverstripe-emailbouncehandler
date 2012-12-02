@@ -1,0 +1,17 @@
+{
+	"name": "silverstripe/legacybouncehandler",
+	"description": "Email bounce handling for SilverStripe CMS, implemented through callbacks in MTAs",
+	"type": "silverstripe-module",
+	"keywords": ["silverstripe", "email"],
+	"authors": [
+	{
+		"name": "Normann Lou",
+		"email": "normann@silverstripe.com"
+	}
+	],
+	"require":
+	{
+		"silverstripe/framework": "~3.1",
+		"composer/installers": "*"
+	}
+}
