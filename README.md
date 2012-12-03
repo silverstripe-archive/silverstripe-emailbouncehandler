@@ -44,6 +44,9 @@ You can send an email through SilverStripe as usual, no special flags are needed
 
 Bounces will be recorded as new `Email_BounceRecord` database entries.
 
+Alternatively, you can define a `BOUNCE_EMAIL` constant to set up
+a global bounce address for all emails sent through SilverStripe's `Email` class.
+
 ## Related
 
  * [Jeremy's bouncehandler module](https://github.com/burnbright/silverstripe-bouncehandler)
