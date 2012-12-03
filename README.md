@@ -42,7 +42,8 @@ You can send an email through SilverStripe as usual, no special flags are needed
 		->setSubject('Test Email')
 		->send();
 
-Bounces will be recorded as new `Email_BounceRecord` database entries.
+Bounces will be recorded as new `Email_BounceRecord` database entries,
+as well as tracked in the `Member->Bounced` property.
 
 Alternatively, you can define a `BOUNCE_EMAIL` constant to set up
 a global bounce address for all emails sent through SilverStripe's `Email` class.
