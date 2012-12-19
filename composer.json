@@ -1,5 +1,5 @@
 {
-	"name": "silverstripe/legacybouncehandler",
+	"name": "silverstripe/emailbouncehandler",
 	"description": "Email bounce handling for SilverStripe CMS, implemented through callbacks in MTAs",
 	"type": "silverstripe-module",
 	"keywords": ["silverstripe", "email"],
